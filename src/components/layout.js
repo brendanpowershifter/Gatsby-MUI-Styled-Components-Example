@@ -8,38 +8,45 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+import { Container } from '@material-ui/core'
+import { Link } from "gatsby-theme-material-ui"
+import styled, { ThemeProvider } from 'styled-components';
+import {
+  createMuiTheme,
+  ThemeProvider as MuiThemeProvider,
+} from '@material-ui/core/styles';
 
-import Header from "./header"
-import "./layout.css"
 
 const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
+
+  const customTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: '#318933',
+      },
+    },
+  });
+
+  const StyledLink = styled(Link)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff'
+  }))
+
 
   return (
     <>
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
-      </div>
+      <MuiThemeProvider theme={customTheme}>
+        <ThemeProvider theme={customTheme}>
+          <Container maxWidth="lg">
+            <main>{children}</main>
+            <footer>
+              © {new Date().getFullYear()}, Built with
+              {` `}
+              <StyledLink href="https://www.gatsbyjs.org">Gatsby</StyledLink>
+            </footer>
+          </Container>
+        </ThemeProvider>
+      </MuiThemeProvider>
     </>
   )
 }
